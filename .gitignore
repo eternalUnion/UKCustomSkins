@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Asset bundle extra files
+Resources/AssetBundles/*.manifest
+Resources/AssetBundles/AssetBundles
