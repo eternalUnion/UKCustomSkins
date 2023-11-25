@@ -1,6 +1,8 @@
-﻿using CustomSkins.Data;
+﻿using CustomSkins.Components;
+using CustomSkins.Data;
 using CustomSkins.Managers.MaterialManagers;
 using CustomSkins.Providers;
+using CustomSkins.Utils;
 using HarmonyLib;
 using MonoMod.Utils;
 using System;
@@ -14,21 +16,6 @@ namespace CustomSkins.Patches
 	[HarmonyPatch(typeof(GunColorGetter))]
 	public static class GunColorGetterPatches
 	{
-		private class WeaponMaterialReloadEventListener : MonoBehaviour
-		{
-			public Action onReload;
-
-			public void OnReload()
-			{
-				onReload.Invoke();
-			}
-
-			private void OnDestroy()
-			{
-				WeaponMaterialManager.onWeaponMaterialReload -= OnReload;
-			}
-		}
-
 		[HarmonyPatch(nameof(GunColorGetter.Awake))]
 		[HarmonyPostfix]
 		public static void SetupCustomMaterials(GunColorGetter __instance)
@@ -44,7 +31,7 @@ namespace CustomSkins.Patches
 			WeaponVariationFilter variation = WeaponVariationFilter.all;
 			WeaponTypeFilter typeFilter = WeaponTypeFilter.all;
 
-			// Revolver
+			// Revolver/AltRevolver
 			if (weaponNumber == 1)
 			{
 				Revolver rev = __instance.gameObject.GetComponentInParent<Revolver>();
@@ -67,6 +54,89 @@ namespace CustomSkins.Patches
 						typeFilter = WeaponTypeFilter.stock;
 				}
 			}
+			// Shotgun
+			else if (weaponNumber == 2)
+			{
+				Shotgun sho = __instance.gameObject.GetComponentInParent<Shotgun>();
+				if (sho != null)
+				{
+					useGeneralMaterial = false;
+
+					if (sho.variation == 0)
+						variation = WeaponVariationFilter.blue;
+					else if (sho.variation == 1)
+						variation = WeaponVariationFilter.green;
+					else if (sho.variation == 2)
+						variation = WeaponVariationFilter.red;
+					else
+						useGeneralMaterial = true;
+
+					typeFilter = WeaponTypeFilter.stock;
+				}
+			}
+			// Nailgun/SawLauncher
+			else if (weaponNumber == 3)
+			{
+				Nailgun nai = __instance.gameObject.GetComponentInParent<Nailgun>();
+				if (nai != null)
+				{
+					useGeneralMaterial = false;
+
+					if (nai.variation == 0)
+						variation = WeaponVariationFilter.blue;
+					else if (nai.variation == 1)
+						variation = WeaponVariationFilter.green;
+					else if (nai.variation == 2)
+						variation = WeaponVariationFilter.red;
+					else
+						useGeneralMaterial = true;
+
+					if (nai.altVersion)
+						typeFilter = WeaponTypeFilter.alt;
+					else
+						typeFilter = WeaponTypeFilter.stock;
+				}
+			}
+			// Railcannon
+			else if (weaponNumber == 4)
+			{
+				Railcannon rai = __instance.gameObject.GetComponentInParent<Railcannon>();
+				if (rai != null)
+				{
+					useGeneralMaterial = false;
+
+					if (rai.variation == 0)
+						variation = WeaponVariationFilter.blue;
+					else if (rai.variation == 1)
+						variation = WeaponVariationFilter.green;
+					else if (rai.variation == 2)
+						variation = WeaponVariationFilter.red;
+					else
+						useGeneralMaterial = true;
+
+					typeFilter = WeaponTypeFilter.stock;
+				}
+			}
+			// RocketLauncher
+			else if (weaponNumber == 5)
+			{
+				RocketLauncher rck = __instance.gameObject.GetComponentInParent<RocketLauncher>();
+				if (rck != null)
+				{
+					useGeneralMaterial = false;
+
+					if (rck.variation == 0)
+						variation = WeaponVariationFilter.blue;
+					else if (rck.variation == 1)
+						variation = WeaponVariationFilter.green;
+					else if (rck.variation == 2)
+						variation = WeaponVariationFilter.red;
+					else
+						useGeneralMaterial = true;
+
+					typeFilter = WeaponTypeFilter.stock;
+				}
+			}
 
 			void ReloadMats()
 			{
@@ -79,9 +149,7 @@ namespace CustomSkins.Patches
 
 				for (int i = 0; i < defaultMats.Length; i++)
 				{
-					string matName = defaultMats[i].name;
-					while (matName.EndsWith("(Clone)"))
-						matName = matName.Substring(0, matName.Length - "(Clone)".Length);
+					string matName = UnityUtils.RemoveClonePostfix(defaultMats[i].name);
 
 					if (useGeneralMaterial && WeaponMaterialManager.TryGetGeneralMaterial(matName, out Material generalMat, out MaterialDefinition generalMatDef))
 					{
@@ -157,9 +225,7 @@ namespace CustomSkins.Patches
 
 				for (int i = 0; i < defaultColoredMats.Length; i++)
 				{
-					string matName = defaultColoredMats[i].name;
-					while (matName.EndsWith("(Clone)"))
-						matName = matName.Substring(0, matName.Length - "(Clone)".Length);
+					string matName = UnityUtils.RemoveClonePostfix(defaultColoredMats[i].name);
 
 					if (useGeneralMaterial && WeaponMaterialManager.TryGetGeneralMaterial(matName, out Material generalMat, out MaterialDefinition generalMatDef))
 					{
@@ -230,14 +296,13 @@ namespace CustomSkins.Patches
 				}
 			}
 
-			WeaponMaterialReloadEventListener listener = __instance.gameObject.AddComponent<WeaponMaterialReloadEventListener>();
+			InternalComponents.WeaponMaterialReloadEventListener listener = __instance.gameObject.AddComponent<InternalComponents.WeaponMaterialReloadEventListener>();
 			listener.onReload = () =>
 			{
 				ReloadMats();
 
 				__instance.UpdateColor();
 			};
-			WeaponMaterialManager.onWeaponMaterialReload += listener.OnReload;
 
 			ReloadMats();
 		}

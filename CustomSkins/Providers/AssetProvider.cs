@@ -59,6 +59,19 @@ namespace CustomSkins.Providers
 			{
 				provider.Open();
 
+				if (provider.FileExists("assetbundle"))
+				{
+					try
+					{
+						_bundle = AssetBundle.LoadFromMemory(provider.ReadBytes("assetbundle"));
+					}
+					catch (Exception e)
+					{
+						Debug.LogError("Caught error while reading asset bundle from skin");
+						Debug.LogException(e);
+					}
+				}
+
 				string materialDataPath = "Data/Materials";
 				if (provider.DirectoryExists(materialDataPath))
 				{

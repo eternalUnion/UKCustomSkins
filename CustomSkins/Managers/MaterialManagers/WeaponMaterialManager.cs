@@ -12,12 +12,6 @@ namespace CustomSkins.Managers.MaterialManagers
 		public delegate void OnWeaponMaterialReload();
 		public static event OnWeaponMaterialReload onWeaponMaterialReload;
 
-		/*private static Dictionary<string, Material> customGeneralMaterial = new Dictionary<string, Material>();
-
-		private static Dictionary<string, Material>[][] customStockMaterials;
-
-		private static Dictionary<string, Material>[][] customAltMaterials;*/
-
 		private static Dictionary<string, Tuple<Material, MaterialDefinition>> customGeneralMaterials = new Dictionary<string, Tuple<Material, MaterialDefinition>>();
 		private static Dictionary<string, Tuple<Material, MaterialDefinition>>[,,] customMaterials = new Dictionary<string, Tuple<Material, MaterialDefinition>>[6, 3, 2];
 
@@ -124,16 +118,154 @@ namespace CustomSkins.Managers.MaterialManagers
 
 			ClearAllMaterials();
 
-			// Pistol
-			TryLoadGeneralMaterial("Pistol New");
-			TryLoadGeneralMaterial("Pistol New CustomColor");
+			// Arms
+			TryLoadGeneralMaterial("Arm White");
+			TryLoadWeaponMaterial("Arm White", 0, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
 
+			TryLoadGeneralMaterial("Arm");
+			TryLoadWeaponMaterial("Arm", 0, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("RedArm");
+			TryLoadWeaponMaterial("RedArm", 0, WeaponVariationFilter.red, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("RedArmLit");
+			TryLoadWeaponMaterial("RedArmLit", 0, WeaponVariationFilter.red, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("GreenArm");
+			TryLoadWeaponMaterial("GreenArm", 0, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("GreenArmUnlit");
+			TryLoadWeaponMaterial("GreenArmUnlit", 0, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			// Revolver
+			TryLoadGeneralMaterial("Pistol New");
 			TryLoadWeaponMaterial("Pistol New", 1, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
 			TryLoadWeaponMaterial("Pistol New", 1, WeaponVariationFilter.green, WeaponTypeFilter.stock);
 			TryLoadWeaponMaterial("Pistol New", 1, WeaponVariationFilter.red, WeaponTypeFilter.stock);
-			TryLoadWeaponMaterial("Pistol New CustomColor", 1, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
-			TryLoadWeaponMaterial("Pistol New CustomColor", 1, WeaponVariationFilter.green, WeaponTypeFilter.alt);
-			TryLoadWeaponMaterial("Pistol New CustomColor", 1, WeaponVariationFilter.red, WeaponTypeFilter.alt);
+
+			TryLoadGeneralMaterial("Pistol New CustomColor");
+			TryLoadWeaponMaterial("Pistol New CustomColor", 1, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Pistol New CustomColor", 1, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Pistol New CustomColor", 1, WeaponVariationFilter.red, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("Pistol New Unlit");
+			TryLoadWeaponMaterial("Pistol New Unlit", 1, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Pistol New Unlit", 1, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Pistol New Unlit", 1, WeaponVariationFilter.red, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("Pistol New Unlit CustomColor");
+			TryLoadWeaponMaterial("Pistol New Unlit CustomColor", 1, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Pistol New Unlit CustomColor", 1, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Pistol New Unlit CustomColor", 1, WeaponVariationFilter.red, WeaponTypeFilter.stock);
+
+			// Alt Revolver
+			TryLoadGeneralMaterial("MinosRevolver");
+			TryLoadWeaponMaterial("MinosRevolver", 1, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("MinosRevolver", 1, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("MinosRevolver", 1, WeaponVariationFilter.red, WeaponTypeFilter.alt);
+
+			TryLoadGeneralMaterial("MinosRevolver CustomColor");
+			TryLoadWeaponMaterial("MinosRevolver CustomColor", 1, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("MinosRevolver CustomColor", 1, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("MinosRevolver CustomColor", 1, WeaponVariationFilter.red, WeaponTypeFilter.alt);
+
+			TryLoadGeneralMaterial("MinosRevolver Unlit");
+			TryLoadWeaponMaterial("MinosRevolver Unlit", 1, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("MinosRevolver Unlit", 1, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("MinosRevolver Unlit", 1, WeaponVariationFilter.red, WeaponTypeFilter.alt);
+
+			TryLoadGeneralMaterial("MinosRevolver Unlit CustomColor");
+			TryLoadWeaponMaterial("MinosRevolver Unlit CustomColor", 1, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("MinosRevolver Unlit CustomColor", 1, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("MinosRevolver Unlit CustomColor", 1, WeaponVariationFilter.red, WeaponTypeFilter.alt);
+
+			// Shotgun
+			TryLoadGeneralMaterial("Shotgun New");
+			TryLoadWeaponMaterial("Shotgun New", 2, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Shotgun New", 2, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("Shotgun New CustomColor");
+			TryLoadWeaponMaterial("Shotgun New CustomColor", 2, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Shotgun New CustomColor", 2, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("Shotgun New Unlit");
+			TryLoadWeaponMaterial("Shotgun New Unlit", 2, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Shotgun New Unlit", 2, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("Shotgun New Unlit CustomColor");
+			TryLoadWeaponMaterial("Shotgun New Unlit CustomColor", 2, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Shotgun New Unlit CustomColor", 2, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			// Nailgun
+			TryLoadGeneralMaterial("Nailgun New");
+			TryLoadWeaponMaterial("Nailgun New", 3, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Nailgun New", 3, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("Nailgun New CustomColor");
+			TryLoadWeaponMaterial("Nailgun New CustomColor", 3, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Nailgun New CustomColor", 3, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("Nailgun New Unlit");
+			TryLoadWeaponMaterial("Nailgun New Unlit", 3, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Nailgun New Unlit", 3, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("Nailgun New Unlit CustomColor");
+			TryLoadWeaponMaterial("Nailgun New Unlit CustomColor", 3, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Nailgun New Unlit CustomColor", 3, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			// SawLauncher
+			TryLoadGeneralMaterial("SawbladeLauncher");
+			TryLoadWeaponMaterial("SawbladeLauncher", 3, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("SawbladeLauncher", 3, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+
+			TryLoadGeneralMaterial("SawbladeLauncher CustomColor");
+			TryLoadWeaponMaterial("SawbladeLauncher CustomColor", 3, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("SawbladeLauncher CustomColor", 3, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+
+			TryLoadGeneralMaterial("SawbladeLauncher Unlit");
+			TryLoadWeaponMaterial("SawbladeLauncher Unlit", 3, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("SawbladeLauncher Unlit", 3, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+
+			TryLoadGeneralMaterial("SawbladeLauncher Unlit CustomColor");
+			TryLoadWeaponMaterial("SawbladeLauncher Unlit CustomColor", 3, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("SawbladeLauncher Unlit CustomColor", 3, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+
+			// Railcannon
+			TryLoadGeneralMaterial("Railcannon");
+			TryLoadWeaponMaterial("Railcannon", 4, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("RailcannonHarpoon");
+			TryLoadWeaponMaterial("RailcannonHarpoon", 4, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("RailcannonMalicious");
+			TryLoadWeaponMaterial("RailcannonMalicious", 4, WeaponVariationFilter.red, WeaponTypeFilter.stock);
+			
+			TryLoadGeneralMaterial("Railcannon CustomColor");
+			TryLoadWeaponMaterial("Railcannon CustomColor", 4, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Railcannon CustomColor", 4, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Railcannon CustomColor", 4, WeaponVariationFilter.red, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("Railcannon Unlit CustomColor");
+			TryLoadWeaponMaterial("Railcannon Unlit CustomColor", 4, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Railcannon Unlit CustomColor", 4, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Railcannon Unlit CustomColor", 4, WeaponVariationFilter.red, WeaponTypeFilter.stock);
+
+			// RocketLauncher
+			TryLoadGeneralMaterial("RocketLauncher");
+			TryLoadWeaponMaterial("RocketLauncher", 5, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("RocketLauncher", 5, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("RocketLauncherCustom");
+			TryLoadWeaponMaterial("RocketLauncherCustom", 5, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("RocketLauncherCustom", 5, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("RocketLauncher Unlit");
+			TryLoadWeaponMaterial("RocketLauncher Unlit", 5, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("RocketLauncher Unlit", 5, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("RocketLauncher Unlit CustomColor");
+			TryLoadWeaponMaterial("RocketLauncher Unlit CustomColor", 5, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("RocketLauncher Unlit CustomColor", 5, WeaponVariationFilter.green, WeaponTypeFilter.stock);
 
 			if (onWeaponMaterialReload != null)
 				onWeaponMaterialReload.Invoke();
