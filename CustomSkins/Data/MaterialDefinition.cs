@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +11,18 @@ namespace CustomSkins.Data
 {
 	public class MaterialDefinition
 	{
+		public static MaterialDefinition Create()
+		{
+			return new MaterialDefinition()
+			{
+				baseMaterialSource = ResourceSource.addressables,
+				mainTextureSource = ResourceSource.local,
+				mainTextureAlphaSource = ResourceSource.local,
+				variationColored = WeaponVariationColored.@default,
+				shaderSource = ResourceSource.addressables
+			};
+		}
+
 		/// <summary>
 		/// Name of the material to change
 		/// </summary>
@@ -18,63 +31,89 @@ namespace CustomSkins.Data
 		/// <summary>
 		/// Name of the material to use as a base. It will be instantiated as a reference
 		/// </summary>
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string baseMaterial { get; set; }
 
 		/// <summary>
 		/// Where the base material is located. Default is local
 		/// </summary>
 		[DefaultValue(nameof(ResourceSource.addressables))]
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public ResourceSource baseMaterialSource { get; set; }
 
 		/// <summary>
 		/// Color of the material, in format `r,g,b` or `r,g,b,a` where components are between 0.0 and 1.0. Not set if null
 		/// </summary>
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string color { get; set; }
 
 		/// <summary>
 		/// Texture of the material, where the value is path to the texture. Default source is local files
 		/// </summary>
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string mainTexture { get; set; }
 
 		/// <summary>
 		/// Where the texture is located. Default is local
 		/// </summary>
 		[DefaultValue(nameof(ResourceSource.local))]
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public ResourceSource mainTextureSource { get; set; }
-		
+
+		/// <summary>
+		/// Grayscale alpha source for the main texture
+		/// </summary>
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+		public string mainTextureAlpha { get; set; }
+
+		/// <summary>
+		/// Where the alpha gray scale texture is located. Default is local
+		/// </summary>
+		[DefaultValue(nameof(ResourceSource.local))]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+		[JsonConverter(typeof(StringEnumConverter))]
+		public ResourceSource mainTextureAlphaSource { get; set; }
+
 		/// <summary>
 		/// Offset of the texture, in format `x,y`. Not sef if null
 		/// </summary>
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string mainTextureOffset { get; set; }
 
 		/// <summary>
 		/// Scale of the texture, in format `x,y`. Not sef if null
 		/// </summary>
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string mainTextureScale { get; set; }
 
 		/// <summary>
 		/// Address of the shader. This field will be used to load the shader
 		/// </summary>
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string shader { get; set; }
 
 		[DefaultValue(nameof(WeaponVariationColored.@default))]
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public WeaponVariationColored variationColored { get; set; }
 
 		/// <summary>
 		/// Source of the shader. Addressables will load the shader from ultrakill assets. Asset bundle will load the shader from skin bundle.
 		/// </summary>
 		[DefaultValue(nameof(ResourceSource.addressables))]
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public ResourceSource shaderSource { get; set; }
 
 		/// <summary>
 		/// Shader property values to set
 		/// </summary>
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public Dictionary<string, ShaderProperty> shaderProperties { get; set; }
 
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public MaterialFilter filters;
 	}
 
@@ -108,10 +147,12 @@ namespace CustomSkins.Data
 
 		[DefaultValue(nameof(WeaponVariationFilter.all))]
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public WeaponVariationFilter weaponVariation { get; set; }
 
 		[DefaultValue(nameof(WeaponTypeFilter.all))]
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public WeaponTypeFilter weaponType { get; set; }
 	}
 
@@ -132,11 +173,14 @@ namespace CustomSkins.Data
 
 	public class ShaderProperty
 	{
+		[JsonConverter(typeof(StringEnumConverter))]
 		public ShaderPropertyType type { get; set; }
+
 		public string value { get; set; }
 
 		[DefaultValue(nameof(ResourceSource.local))]
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public ResourceSource valueSource { get; set; }
 
 		public static bool TryDeserializeColor(string value, out Color color)

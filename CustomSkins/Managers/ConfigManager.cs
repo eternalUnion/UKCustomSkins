@@ -396,6 +396,27 @@ namespace CustomSkins.Managers
 				Debug.LogError($"[{Plugin.PLUGIN_NAME}] Error caught while loading icon from manifest:\n{e}");
 			}
 
+            #region ConversionPanel
+            new ConfigHeader(convertPanel, "Ultraskins Converter") { textColor = Color.red };
+
+            var ultraskinPathInput = new StringField(convertPanel, "Skin folder path", "ultraskinsFolderPath", "", true, false);
+            var ultraskinConvertButton = new ButtonField(convertPanel, "Convert to Custom Skin", "ultraskinsConverBtn");
+            var ultraskinConvertOut = new ConfigHeader(convertPanel, "", 18, TextAnchor.MiddleLeft);
+            ultraskinConvertButton.onClick += () =>
+            {
+                var err = ConversionManager.UltraskinsConverter.ProcessUltraskinsFolder(ultraskinPathInput.value);
+                if (err != null)
+                {
+                    ultraskinConvertOut.text = $"<color=red>Error: {err}</color>";
+				}
+                else
+                {
+                    ultraskinConvertOut.text = $"<color=green>Success, added to the list</color>";
+                    ScanSkins();
+                }
+            };
+			#endregion
+
 			var topButtons = new ButtonArrayField(config.rootPanel, "topButtons", 2, new float[] { 0.5f, 0.5f }, new string[] { "Skins Folder", "Create New Skin" });
             topButtons.buttonHeight = 50;
 

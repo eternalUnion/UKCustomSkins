@@ -45,7 +45,7 @@ namespace CustomSkins.Patches
 					}
 					else
 					{
-						armRenderer.material = defaultMaterial;
+						armRenderer.material = new Material(defaultMaterial);
 					}
 				}
 

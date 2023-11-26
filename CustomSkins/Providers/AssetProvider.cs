@@ -350,6 +350,8 @@ namespace CustomSkins.Providers
 							break;
 
 						case ShaderPropertyType.texture:
+							Texture2D textureValue = null;
+
 							switch (shaderProp.Value.valueSource)
 							{
 								case ResourceSource.unknown:
@@ -359,21 +361,15 @@ namespace CustomSkins.Providers
 								case ResourceSource.local:
 									if (_fileProvider.FileExists(propValue))
 									{
-										if (_textures.TryGetValue(propValue, out Texture2D cachedTexture))
-										{
-											mat.SetTexture(propName, cachedTexture);
-										}
-										else
+										if (!_textures.TryGetValue(propValue, out textureValue))
 										{
 											try
 											{
-												Texture2D texture = new Texture2D(2, 2);
-												texture.LoadImage(_fileProvider.ReadBytes(propValue));
-												texture.filterMode = FilterMode.Point;
-
-												mat.SetTexture(propName, texture);
-												_unmanagedResources.Add(texture);
-												_textures[propValue] = texture;
+												textureValue = new Texture2D(2, 2);
+												textureValue.LoadImage(_fileProvider.ReadBytes(propValue));
+												textureValue.filterMode = FilterMode.Point;
+												_textures[propValue] = textureValue;
+												_unmanagedResources.Add(textureValue);
 											}
 											catch (Exception e)
 											{
@@ -384,14 +380,10 @@ namespace CustomSkins.Providers
 									break;
 
 								case ResourceSource.addressables:
-									Texture2D addressableTexture = Addressables.LoadAssetAsync<Texture2D>(propValue).WaitForCompletion();
-									if (addressableTexture == null)
+									textureValue = Addressables.LoadAssetAsync<Texture2D>(propValue).WaitForCompletion();
+									if (textureValue == null)
 									{
 										Debug.LogWarning($"Failed to locate texture {propValue} in addressables. Skipped.");
-									}
-									else
-									{
-										mat.SetTexture(propName, addressableTexture);
 									}
 									break;
 
@@ -402,17 +394,16 @@ namespace CustomSkins.Providers
 										break;
 									}
 
-									Texture2D assetbundleTexture = _bundle.LoadAsset<Texture2D>(propValue);
-									if (assetbundleTexture == null)
+									textureValue = _bundle.LoadAsset<Texture2D>(propValue);
+									if (textureValue == null)
 									{
 										Debug.LogError($"Texture {propValue} could not be loaded from asset bundle because it was not found");
 									}
-									else
-									{
-										mat.SetTexture(propName, assetbundleTexture);
-									}
 									break;
 							}
+
+							if (textureValue != null)
+								mat.SetTexture(propName, textureValue);
 							break;
 
 						case ShaderPropertyType.textureOffset:
@@ -443,6 +434,88 @@ namespace CustomSkins.Providers
 								Debug.LogWarning($"Failed to deserialize vector from {propValue}. Skipped.");
 							break;
 					}
+				}
+			}
+
+			// Set alpha last as shader property can be used to modify main texture as well
+			if (matDef.mainTextureAlpha != null && mat.mainTexture != null && mat.mainTexture is Texture2D mainTex)
+			{
+				Texture2D textureValue = null;
+
+				switch (matDef.mainTextureAlphaSource)
+				{
+					case ResourceSource.unknown:
+						Debug.LogWarning($"Unknown main texture alpha source for {mat.name}. Skipped.");
+						break;
+
+					case ResourceSource.local:
+						if (_fileProvider.FileExists(matDef.mainTextureAlpha))
+						{
+							if (!_textures.TryGetValue(matDef.mainTextureAlpha, out textureValue))
+							{
+								try
+								{
+									textureValue = new Texture2D(2, 2);
+									textureValue.LoadImage(_fileProvider.ReadBytes(matDef.mainTextureAlpha));
+									textureValue.filterMode = FilterMode.Point;
+									_textures[matDef.mainTextureAlpha] = textureValue;
+									_unmanagedResources.Add(textureValue);
+								}
+								catch (Exception e)
+								{
+									Debug.LogException(e);
+								}
+							}
+						}
+						break;
+
+					case ResourceSource.addressables:
+						textureValue = Addressables.LoadAssetAsync<Texture2D>(matDef.mainTextureAlpha).WaitForCompletion();
+						if (textureValue == null)
+						{
+							Debug.LogWarning($"Failed to locate texture {matDef.mainTextureAlpha} in addressables. Skipped.");
+						}
+						break;
+
+					case ResourceSource.assetbundle:
+						if (_bundle == null)
+						{
+							Debug.LogError($"Texture {matDef.mainTextureAlpha} could not be loaded from asset bundle because none was loaded");
+							break;
+						}
+
+						textureValue = _bundle.LoadAsset<Texture2D>(matDef.mainTextureAlpha);
+						if (textureValue == null)
+						{
+							Debug.LogError($"Texture {matDef.mainTextureAlpha} could not be loaded from asset bundle because it was not found");
+						}
+						break;
+				}
+
+				if (textureValue != null)
+				{
+					if (textureValue.width != mainTex.width || textureValue.height != mainTex.height)
+					{
+						Texture2D resizedAlpha = new Texture2D(textureValue.width, textureValue.height);
+						resizedAlpha.SetPixels(textureValue.GetPixels());
+						resizedAlpha.Resize(mainTex.width, mainTex.height);
+						resizedAlpha.Apply();
+
+						textureValue = resizedAlpha;
+					}
+
+					Color[] newPixels = mainTex.GetPixels();
+					Color[] alphaPixels = textureValue.GetPixels();
+					int limit = Math.Min(newPixels.Length, alphaPixels.Length);
+					for (int pixel = 0; pixel < limit; pixel++)
+					{
+						newPixels[pixel].a = alphaPixels[pixel].grayscale;
+					}
+
+					Texture2D newMainTex = new Texture2D(mainTex.width, mainTex.height);
+					newMainTex.SetPixels(newPixels);
+					newMainTex.Apply();
+					mat.mainTexture = newMainTex;
 				}
 			}
 

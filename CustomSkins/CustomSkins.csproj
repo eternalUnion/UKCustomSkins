@@ -11,16 +11,20 @@
 
   <ItemGroup>
     <None Remove="Resources\AssetBundles\customskins" />
+    <None Remove="Resources\blank-emission.png" />
     <None Remove="Resources\convert-icon.png" />
     <None Remove="Resources\icon.png" />
     <None Remove="Resources\online-icon.png" />
+    <None Remove="Resources\ultraskins-logo.png" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\AssetBundles\customskins" />
+    <EmbeddedResource Include="Resources\blank-emission.png" />
     <EmbeddedResource Include="Resources\convert-icon.png" />
     <EmbeddedResource Include="Resources\icon.png" />
     <EmbeddedResource Include="Resources\online-icon.png" />
+    <EmbeddedResource Include="Resources\ultraskins-logo.png" />
   </ItemGroup>
 
   <ItemGroup>
