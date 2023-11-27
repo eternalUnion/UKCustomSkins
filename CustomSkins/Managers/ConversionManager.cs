@@ -15,8 +15,10 @@ namespace CustomSkins.Managers
 		{
 			const string VERTEXLIT_EM_SHADER = "Assets/Shaders/Main/ULTRAKILL-vertexlit-emissive.shader";
 			const string VERTEXLIT_EM_CUSTOM_SHADER = "Assets/Shaders/Special/ULTRAKILL-vertexlit-customcolors-emissive.shader";
+			
 			const string UNLIT_EM_SHADER = "Assets/Shaders/Main/ULTRAKILL-unlit-emissive.shader";
 			const string UNLIT_EM_CUSTOM_SHADER = "Assets/Shaders/Main/ULTRAKILL-unlit-customcolors.shader";
+			
 			const string VERTEXLIT_RAI_EM_SHADER = "Assets/Shaders/Special/ULTRAKILL-vertexlit-railgun.shader";
 			const string VERTEXLIT_RAI_EM_CUSTOM_SHADER = "Assets/Shaders/Special/ULTRAKILL-vertexlit-customcolors-railgun.shader";
 

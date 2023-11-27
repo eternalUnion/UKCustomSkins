@@ -144,154 +144,121 @@ namespace CustomSkins.Patches
 				// 1: Filtered weapon material (variation, alt/stock, weapon number => best match)
 				// 2: General weapon material (no filter, material name match)
 				// 3: Default weapon material
+				bool GetBestMaterial(Material defaultMaterial, out Material bestMaterial, out MaterialDefinition bestMaterialDefinition)
+				{
+					string matName = UnityUtils.RemoveClonePostfix(defaultMaterial.name);
+
+					if (useGeneralMaterial && WeaponMaterialManager.TryGetGeneralMaterial(matName, out Material generalMat, out MaterialDefinition generalMatDef))
+					{
+						bestMaterial = new Material(generalMat);
+						bestMaterialDefinition = generalMatDef;
+						return true;
+					}
+					else if (!useGeneralMaterial && WeaponMaterialManager.TryGetWeaponMaterial(matName, weaponNumber, variation, typeFilter, out Material weaponMat, out MaterialDefinition weaponMatDef))
+					{
+						bestMaterial = new Material(weaponMat);
+						bestMaterialDefinition = weaponMatDef;
+						return true;
+					}
+					else
+					{
+						bestMaterial = null;
+						bestMaterialDefinition = null;
+						return false;
+					}
+				}
+
+				void SetVariationColored(MaterialDefinition currentMaterialDefinition, Material variationColoredMaterial, int variationColor)
+				{
+					bool variationColored;
+
+					if (currentMaterialDefinition == null || currentMaterialDefinition.variationColored == WeaponVariationColored.@default)
+						variationColored = originalIsVariationColored;
+					else
+						variationColored = currentMaterialDefinition.variationColored == WeaponVariationColored.yes;
+
+					if (weaponIcon == null)
+					{
+						if (variationColoredMaterial.HasProperty("_EmissiveColor"))
+						{
+							variationColoredMaterial.SetColor("_EmissiveColor", variationColor < 0 ? Color.white : MonoSingleton<ColorBlindSettings>.Instance.variationColors[variationColor]);
+						}
+						else
+						{
+							variationColoredMaterial.color = (variationColor < 0) ? Color.white : MonoSingleton<ColorBlindSettings>.Instance.variationColors[variationColor];
+						}
+					}
+					else
+					{
+						if (variationColored)
+						{
+							if (!weaponIcon.variationColoredRenderers.Contains(thisRenderer))
+							{
+								weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.AddItem(thisRenderer).ToArray();
+							}
+						}
+						else
+						{
+							if (weaponIcon.variationColoredRenderers.Contains(thisRenderer))
+							{
+								weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.Where(rend => rend != thisRenderer).ToArray();
+							}
+						}
+					}
+
+				}
+
+				static int GetVariationNumber(WeaponVariationFilter variation)
+				{
+					switch (variation)
+					{
+						case WeaponVariationFilter.blue:
+							return 0;
+
+						case WeaponVariationFilter.green:
+							return 1;
+
+						case WeaponVariationFilter.red:
+							return 2;
+
+						default:
+							return -1;
+					}
+				}
 
 				bool usingCustomColor = __instance.GetPreset() != 0 || (MonoSingleton<PrefsManager>.Instance.GetBool("gunColorType." + __instance.weaponNumber + (__instance.altVersion ? ".a" : ""), false) && GameProgressSaver.HasWeaponCustomization((GameProgressSaver.WeaponCustomizationType)(__instance.weaponNumber - 1)));
 
 				for (int i = 0; i < defaultMats.Length; i++)
 				{
-					string matName = UnityUtils.RemoveClonePostfix(defaultMats[i].name);
-
-					if (useGeneralMaterial && WeaponMaterialManager.TryGetGeneralMaterial(matName, out Material generalMat, out MaterialDefinition generalMatDef))
+					if (GetBestMaterial(defaultMats[i], out Material bestMaterial, out MaterialDefinition bestMaterialDefinition))
 					{
-						__instance.defaultMaterials[i] = new Material(generalMat);
-
-						if (i == 0 && !usingCustomColor && weaponIcon != null)
-						{
-							bool variationColored;
-							if (generalMatDef.variationColored == WeaponVariationColored.@default)
-								variationColored = originalIsVariationColored;
-							else
-								variationColored = generalMatDef.variationColored == WeaponVariationColored.yes;
-
-							if (variationColored)
-							{
-								if (!weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.AddItem(thisRenderer).ToArray();
-							}
-							else
-							{
-								if (weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.Where(rend => rend != thisRenderer).ToArray();
-							}
-						}
-					}
-					else if (!useGeneralMaterial && WeaponMaterialManager.TryGetWeaponMaterial(matName, weaponNumber, variation, typeFilter, out Material weaponMat, out MaterialDefinition weaponMatDef))
-					{
-						__instance.defaultMaterials[i] = new Material(weaponMat);
-
-						if (i == 0 && !usingCustomColor && weaponIcon != null)
-						{
-							bool variationColored;
-							if (weaponMatDef.variationColored == WeaponVariationColored.@default)
-								variationColored = originalIsVariationColored;
-							else
-								variationColored = weaponMatDef.variationColored == WeaponVariationColored.yes;
-
-							if (variationColored)
-							{
-								if (!weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-								{
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.AddItem(thisRenderer).ToArray();
-								}
-							}
-							else
-							{
-								if (weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-								{
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.Where(rend => rend != thisRenderer).ToArray();
-								}
-							}
-						}
+						__instance.defaultMaterials[i] = bestMaterial;
 					}
 					else
 					{
 						__instance.defaultMaterials[i] = new Material(defaultMats[i]);
+					}
 
-						if (i == 0 && !usingCustomColor && weaponIcon != null)
-						{
-							if (originalIsVariationColored)
-							{
-								if (!weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.AddItem(thisRenderer).ToArray();
-							}
-							else
-							{
-								if (weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.Where(rend => rend != thisRenderer).ToArray();
-							}
-						}
+					if (i == 0 && !usingCustomColor)
+					{
+						SetVariationColored(bestMaterialDefinition, __instance.defaultMaterials[i], GetVariationNumber(variation));
 					}
 				}
 
 				for (int i = 0; i < defaultColoredMats.Length; i++)
 				{
-					string matName = UnityUtils.RemoveClonePostfix(defaultColoredMats[i].name);
-
-					if (useGeneralMaterial && WeaponMaterialManager.TryGetGeneralMaterial(matName, out Material generalMat, out MaterialDefinition generalMatDef))
+					if (GetBestMaterial(defaultColoredMats[i], out Material bestMaterial, out MaterialDefinition bestMaterialDefinition))
 					{
-						__instance.coloredMaterials[i] = new Material(generalMat);
-
-						if (i == 0 && usingCustomColor && weaponIcon != null)
-						{
-							bool variationColored;
-							if (generalMatDef.variationColored == WeaponVariationColored.@default)
-								variationColored = originalIsVariationColored;
-							else
-								variationColored = generalMatDef.variationColored == WeaponVariationColored.yes;
-
-							if (variationColored)
-							{
-								if (!weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.AddItem(thisRenderer).ToArray();
-							}
-							else
-							{
-								if (weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.Where(rend => rend != thisRenderer).ToArray();
-							}
-						}
-					}
-					else if (!useGeneralMaterial && WeaponMaterialManager.TryGetWeaponMaterial(matName, weaponNumber, variation, typeFilter, out Material weaponMat, out MaterialDefinition weaponMatDef))
-					{
-						__instance.coloredMaterials[i] = new Material(weaponMat);
-
-						if (i == 0 && usingCustomColor && weaponIcon != null)
-						{
-							bool variationColored;
-							if (weaponMatDef.variationColored == WeaponVariationColored.@default)
-								variationColored = originalIsVariationColored;
-							else
-								variationColored = weaponMatDef.variationColored == WeaponVariationColored.yes;
-
-							if (variationColored)
-							{
-								if (!weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.AddItem(thisRenderer).ToArray();
-							}
-							else
-							{
-								if (weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.Where(rend => rend != thisRenderer).ToArray();
-							}
-						}
+						__instance.coloredMaterials[i] = bestMaterial;
 					}
 					else
 					{
 						__instance.coloredMaterials[i] = new Material(defaultColoredMats[i]);
+					}
 
-						if (i == 0 && usingCustomColor && weaponIcon != null)
-						{
-							if (originalIsVariationColored)
-							{
-								if (!weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.AddItem(thisRenderer).ToArray();
-							}
-							else
-							{
-								if (weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-									weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.Where(rend => rend != thisRenderer).ToArray();
-							}
-						}
+					if (i == 0 && usingCustomColor)
+					{
+						SetVariationColored(bestMaterialDefinition, __instance.coloredMaterials[i], GetVariationNumber(variation));
 					}
 				}
 			}
