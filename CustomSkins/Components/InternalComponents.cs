@@ -12,6 +12,7 @@ namespace CustomSkins.Components
 		public class WeaponMaterialReloadEventListener : MonoBehaviour
 		{
 			public Action onReload;
+			private bool subscribed = false;
 
 			public void OnReload()
 			{
@@ -20,12 +21,22 @@ namespace CustomSkins.Components
 
 			private void Awake()
 			{
+				Subscribe();
+			}
+
+			public void Subscribe()
+			{
+				if (subscribed)
+					return;
+
 				WeaponMaterialManager.onWeaponMaterialReload += OnReload;
+				subscribed = true;
 			}
 
 			private void OnDestroy()
 			{
-				WeaponMaterialManager.onWeaponMaterialReload -= OnReload;
+				if (subscribed)
+					WeaponMaterialManager.onWeaponMaterialReload -= OnReload;
 			}
 		}
 	}

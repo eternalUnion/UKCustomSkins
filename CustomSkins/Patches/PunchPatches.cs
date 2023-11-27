@@ -72,6 +72,7 @@ namespace CustomSkins.Patches
 				{
 					ReloadMaterial();
 				};
+				reloadListener.Subscribe();
 
 				ReloadMaterial();
 			}

@@ -303,6 +303,7 @@ namespace CustomSkins.Patches
 
 				__instance.UpdateColor();
 			};
+			listener.Subscribe();
 
 			ReloadMats();
 		}

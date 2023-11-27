@@ -214,6 +214,22 @@ namespace CustomSkins.Managers.MaterialManagers
 			TryLoadWeaponMaterial("Nailgun New Unlit CustomColor", 3, WeaponVariationFilter.green, WeaponTypeFilter.stock);
 
 			// SawLauncher
+			TryLoadGeneralMaterial("Sawblade");
+			TryLoadWeaponMaterial("Sawblade", 3, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("Sawblade", 3, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+
+			TryLoadGeneralMaterial("Sawblade CustomColor");
+			TryLoadWeaponMaterial("Sawblade CustomColor", 3, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("Sawblade CustomColor", 3, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+
+			TryLoadGeneralMaterial("Sawblade Unlit");
+			TryLoadWeaponMaterial("Sawblade Unlit", 3, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("Sawblade Unlit", 3, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+
+			TryLoadGeneralMaterial("Sawblade Unlit CustomColor");
+			TryLoadWeaponMaterial("Sawblade Unlit CustomColor", 3, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
+			TryLoadWeaponMaterial("Sawblade Unlit CustomColor", 3, WeaponVariationFilter.green, WeaponTypeFilter.alt);
+
 			TryLoadGeneralMaterial("SawbladeLauncher");
 			TryLoadWeaponMaterial("SawbladeLauncher", 3, WeaponVariationFilter.blue, WeaponTypeFilter.alt);
 			TryLoadWeaponMaterial("SawbladeLauncher", 3, WeaponVariationFilter.green, WeaponTypeFilter.alt);
@@ -244,6 +260,11 @@ namespace CustomSkins.Managers.MaterialManagers
 			TryLoadWeaponMaterial("Railcannon CustomColor", 4, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
 			TryLoadWeaponMaterial("Railcannon CustomColor", 4, WeaponVariationFilter.green, WeaponTypeFilter.stock);
 			TryLoadWeaponMaterial("Railcannon CustomColor", 4, WeaponVariationFilter.red, WeaponTypeFilter.stock);
+
+			TryLoadGeneralMaterial("Railcannon Unlit");
+			TryLoadWeaponMaterial("Railcannon Unlit", 4, WeaponVariationFilter.blue, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Railcannon Unlit", 4, WeaponVariationFilter.green, WeaponTypeFilter.stock);
+			TryLoadWeaponMaterial("Railcannon Unlit", 4, WeaponVariationFilter.red, WeaponTypeFilter.stock);
 
 			TryLoadGeneralMaterial("Railcannon Unlit CustomColor");
 			TryLoadWeaponMaterial("Railcannon Unlit CustomColor", 4, WeaponVariationFilter.blue, WeaponTypeFilter.stock);

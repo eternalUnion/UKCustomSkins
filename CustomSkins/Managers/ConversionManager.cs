@@ -15,6 +15,8 @@ namespace CustomSkins.Managers
 		{
 			const string VERTEXLIT_EM_SHADER = "Assets/Shaders/Main/ULTRAKILL-vertexlit-emissive.shader";
 			const string VERTEXLIT_EM_CUSTOM_SHADER = "Assets/Shaders/Special/ULTRAKILL-vertexlit-customcolors-emissive.shader";
+			const string UNLIT_EM_SHADER = "Assets/Shaders/Main/ULTRAKILL-unlit-emissive.shader";
+			const string UNLIT_EM_CUSTOM_SHADER = "Assets/Shaders/Main/ULTRAKILL-unlit-customcolors.shader";
 			const string VERTEXLIT_RAI_EM_SHADER = "Assets/Shaders/Special/ULTRAKILL-vertexlit-railgun.shader";
 			const string VERTEXLIT_RAI_EM_CUSTOM_SHADER = "Assets/Shaders/Special/ULTRAKILL-vertexlit-customcolors-railgun.shader";
 
@@ -46,6 +48,10 @@ namespace CustomSkins.Managers
 			const string SWL_TEX_FILENAME = "T_SawbladeLauncher.png";
 			const string SWL_EM_FILENAME = "T_SawbladeLauncher_Emissive.png";
 			const string SWL_ID_FILENAME = "T_SawbladeLauncher_ID.png";
+
+			const string SWL_SAW_TEX_FILENAME = "T_Sawblade.png";
+			const string SWL_SAW_EM_FILENAME = "T_Sawblade_Emissive.png";
+			const string SWL_SAW_ID_FILENAME = "T_Sawblade_ID.png";
 
 			const string RAI_TEX_FILENAME = "Railgun_Main_AlphaGlow.png";
 			const string RAI_EM_FILENAME = "Railgun_Main_Emissive.png";
@@ -149,25 +155,47 @@ namespace CustomSkins.Managers
 						}
 					}
 
+					// Arms
 					ProcessSkin(ARM_BLU_TEX_FILENAME, ARM_BLU_EM_FILENAME, null, "Arm", "Assets/Materials/Arm/Arm.mat", null, null, "arm_blue.json", null);
 					ProcessSkin(ARM_RED_TEX_FILENAME, ARM_RED_EM_FILENAME, null, "RedArmLit", "Assets/Models/V1/Arms/RedArmLit.mat", null, null, "arm_red.json", null);
 					ProcessSkin(ARM_GRE_TEX_FILENAME, ARM_GRE_EM_FILENAME, null, "GreenArm", "Assets/Models/V1/Arms/GreenArm.mat", null, null, "arm_green.json", null);
 
+					// ArmsUnlit
+					ProcessSkin(ARM_RED_TEX_FILENAME, ARM_RED_EM_FILENAME, null, "RedArm", "Assets/Models/V1/Arms/RedArm.mat", null, null, "arm_red_preview.json", null, UNLIT_EM_SHADER, null);
+					ProcessSkin(ARM_GRE_TEX_FILENAME, ARM_GRE_EM_FILENAME, null, "GreenArmUnlit", "Assets/Models/V1/Arms/GreenArmUnlit.mat", null, null, "arm_green_preview.json", null, UNLIT_EM_SHADER, null);
+
+					// Revolver
 					ProcessSkin(REV_TEX_FILENAME, REV_EM_FILENAME, REV_ID_FILENAME, "Pistol New", "Assets/Models/Weapons/Revolver/Pistol New.mat", "Pistol New CustomColor", "Assets/Models/Weapons/Revolver/Pistol New CustomColor.mat", "revolver.json", "revolver_custom.json");
-					
+					ProcessSkin(REV_TEX_FILENAME, REV_EM_FILENAME, REV_ID_FILENAME, "Pistol New Unlit", "Assets/Models/Weapons/Revolver/Pistol New Unlit.mat", "Pistol New Unlit CustomColor", "Assets/Models/Weapons/Revolver/Pistol New Unlit CustomColor.mat", "revolver_preview.json", "revolver_preview_custom.json", UNLIT_EM_SHADER, UNLIT_EM_CUSTOM_SHADER);
+
+					// AltRevolver
 					ProcessSkin(REV_ALT_TEX_FILENAME, REV_ALT_EM_FILENAME, REV_ALT_ID_FILENAME, "MinosRevolver", "Assets/Models/Weapons/Alternative Revolver/MinosRevolver.mat", "MinosRevolver CustomColor", "Assets/Models/Weapons/Alternative Revolver/MinosRevolver CustomColor.mat", "revolver_alt.json", "revolver_alt_custom.json");
+					ProcessSkin(REV_ALT_TEX_FILENAME, REV_ALT_EM_FILENAME, REV_ALT_ID_FILENAME, "MinosRevolver Unlit", "Assets/Models/Weapons/Alternative Revolver/MinosRevolver Unlit.mat", "MinosRevolver Unlit CustomColor", "Assets/Models/Weapons/Alternative Revolver/MinosRevolver Unlit CustomColor.mat", "revolver_alt_preview.json", "revolver_alt_preview_custom.json", UNLIT_EM_SHADER, UNLIT_EM_CUSTOM_SHADER);
 
+					// Shotgun
 					ProcessSkin(SHO_TEX_FILENAME, SHO_EM_FILENAME, SHO_ID_FILENAME, "Shotgun New", "Assets/Models/Weapons/Shotgun/Shotgun New.mat", "Shotgun New CustomColor", "Assets/Models/Weapons/Shotgun/Shotgun New CustomColor.mat", "shotgun.json", "shotgun_custom.json");
+					ProcessSkin(SHO_TEX_FILENAME, SHO_EM_FILENAME, SHO_ID_FILENAME, "Shotgun New Unlit", "Assets/Models/Weapons/Shotgun/Shotgun New Unlit.mat", "Shotgun New Unlit CustomColor", "Assets/Models/Weapons/Shotgun/Shotgun New Unlit CustomColor.mat", "shotgun_preview.json", "shotgun_preview_custom.json", UNLIT_EM_SHADER, UNLIT_EM_CUSTOM_SHADER);
 
+					// Nailgun
 					ProcessSkin(NAI_TEX_FILENAME, NAI_EM_FILENAME, NAI_ID_FILENAME, "Nailgun New", "Assets/Models/Weapons/Nailgun/Nailgun New.mat", "Nailgun New CustomColor", "Assets/Models/Weapons/Nailgun/Nailgun New CustomColor.mat", "nailgun.json", "nailgun_custom.json");
+					ProcessSkin(NAI_TEX_FILENAME, NAI_EM_FILENAME, NAI_ID_FILENAME, "Nailgun New Unlit", "Assets/Models/Weapons/Nailgun/Nailgun New Unlit.mat", "Nailgun New Unlit CustomColor", "Assets/Models/Weapons/Nailgun/Nailgun New Unlit CustomColor.mat", "nailgun_preview.json", "nailgun_preview_custom.json", UNLIT_EM_SHADER, UNLIT_EM_CUSTOM_SHADER);
 
+					// SawbladeLauncher
 					ProcessSkin(SWL_TEX_FILENAME, SWL_EM_FILENAME, SWL_ID_FILENAME, "SawbladeLauncher", "Assets/Models/Weapons/Sawblade Launcher/SawbladeLauncher.mat", "SawbladeLauncher CustomColor", "Assets/Models/Weapons/Sawblade Launcher/SawbladeLauncher CustomColor.mat", "sawblade_launcher.json", "sawblade_launcher_custom.json");
+					ProcessSkin(SWL_TEX_FILENAME, SWL_EM_FILENAME, SWL_ID_FILENAME, "SawbladeLauncher Unlit", "Assets/Models/Weapons/Sawblade Launcher/SawbladeLauncher Unlit.mat", "SawbladeLauncher Unlit CustomColor", "Assets/Models/Weapons/Sawblade Launcher/SawbladeLauncher Unlit CustomColor.mat", "sawblade_launcher_preview.json", "sawblade_launcher_preview_custom.json", UNLIT_EM_SHADER, UNLIT_EM_CUSTOM_SHADER);
 
-					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, RAI_ID_FILENAME, "Railcannon", "Assets/Models/Weapons/Railcannon/Railcannon.mat", "Railcannon CustomColor", "Assets/Models/Weapons/Railcannon/Railcannon CustomColor.mat", "railcannon_blue.json", "railcannon_custom.json", shader: VERTEXLIT_RAI_EM_SHADER, customShader: VERTEXLIT_RAI_EM_CUSTOM_SHADER);
-					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, null, "RailcannonHarpoon", "Assets/Models/Weapons/Railcannon/RailcannonHarpoon.mat", null, null, "railcannon_green.json", null, shader: VERTEXLIT_RAI_EM_SHADER, customShader: VERTEXLIT_RAI_EM_CUSTOM_SHADER);
-					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, null, "RailcannonMalicious", "Assets/Models/Weapons/Railcannon/RailcannonMalicious.mat", null, null, "railcannon_red.json", null, shader: VERTEXLIT_RAI_EM_SHADER, customShader: VERTEXLIT_RAI_EM_CUSTOM_SHADER);
+					ProcessSkin(SWL_SAW_TEX_FILENAME, SWL_SAW_EM_FILENAME, SWL_SAW_ID_FILENAME, "Sawblade", "Assets/Models/Weapons/Sawblade Launcher/Sawblade.mat", "Sawblade CustomColor", "Assets/Models/Weapons/Sawblade Launcher/Sawblade CustomColor.mat", "sawblade.json", "sawblade_custom.json");
+					ProcessSkin(SWL_SAW_TEX_FILENAME, SWL_SAW_EM_FILENAME, SWL_SAW_ID_FILENAME, "Sawblade Unlit", "Assets/Models/Weapons/Sawblade Launcher/Sawblade Unlit.mat", "Sawblade Unlit CustomColor", "Assets/Models/Weapons/Sawblade Launcher/Sawblade Unlit CustomColor.mat", "sawblade_preview.json", "sawblade_preview_custom.json", UNLIT_EM_SHADER, UNLIT_EM_CUSTOM_SHADER);
 
+					// Railcannon
+					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, RAI_ID_FILENAME, "Railcannon", "Assets/Models/Weapons/Railcannon/Railcannon.mat", "Railcannon CustomColor", "Assets/Models/Weapons/Railcannon/Railcannon CustomColor.mat", "railcannon_blue.json", "railcannon_custom.json", VERTEXLIT_RAI_EM_SHADER, VERTEXLIT_RAI_EM_CUSTOM_SHADER);
+					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, null, "RailcannonHarpoon", "Assets/Models/Weapons/Railcannon/RailcannonHarpoon.mat", null, null, "railcannon_green.json", null, VERTEXLIT_RAI_EM_SHADER, VERTEXLIT_RAI_EM_CUSTOM_SHADER);
+					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, null, "RailcannonMalicious", "Assets/Models/Weapons/Railcannon/RailcannonMalicious.mat", null, null, "railcannon_red.json", null, VERTEXLIT_RAI_EM_SHADER, VERTEXLIT_RAI_EM_CUSTOM_SHADER);
+					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, RAI_ID_FILENAME, "Railcannon Unlit", "Assets/Models/Weapons/Railcannon/Railcannon Unlit.mat", "Railcannon Unlit CustomColor", "Assets/Models/Weapons/Railcannon/Railcannon Unlit CustomColor.mat", "railcannon_preview.json", "railcannon_preview_custom.json", UNLIT_EM_SHADER, UNLIT_EM_CUSTOM_SHADER);
+					
+					// RocketLauncher
 					ProcessSkin(RCK_TEX_FILENAME, RCK_EM_FILENAME, RCK_ID_FILENAME, "RocketLauncher", "Assets/Models/Weapons/RocketLauncher/RocketLauncher.mat", "RocketLauncherCustom", "Assets/Models/Weapons/RocketLauncher/RocketLauncherCustom.mat", "rocket_launcher.json", "rocket_launcher_custom.json");
+					ProcessSkin(RCK_TEX_FILENAME, RCK_EM_FILENAME, RCK_ID_FILENAME, "RocketLauncher Unlit", "Assets/Models/Weapons/RocketLauncher/RocketLauncher Unlit.mat", "RocketLauncher Unlit CustomColor", "Assets/Models/Weapons/RocketLauncher/RocketLauncher Unlit CustomColor.mat", "rocket_launcher_preview.json", "rocket_launcher_preview_custom.json", UNLIT_EM_SHADER, UNLIT_EM_CUSTOM_SHADER);
 				}
 				catch (Exception e)
 				{
