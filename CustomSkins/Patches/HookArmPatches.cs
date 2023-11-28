@@ -27,6 +27,9 @@ namespace CustomSkins.Patches
 
 				void ReloadMaterial()
 				{
+					if (__instance == null)
+						return;
+
 					if (WeaponMaterialManager.TryGetWeaponMaterial(matName, 0, WeaponVariationFilter.green, WeaponTypeFilter.stock, out Material weaponMat, out MaterialDefinition weaponMatDef))
 					{
 						armRenderer.material = new Material(weaponMat);

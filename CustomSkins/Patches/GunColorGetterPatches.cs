@@ -177,35 +177,34 @@ namespace CustomSkins.Patches
 					else
 						variationColored = currentMaterialDefinition.variationColored == WeaponVariationColored.yes;
 
-					if (weaponIcon == null)
+					if (variationColored)
 					{
-						if (variationColoredMaterial.HasProperty("_EmissiveColor"))
+						if (weaponIcon == null)
 						{
-							variationColoredMaterial.SetColor("_EmissiveColor", variationColor < 0 ? Color.white : MonoSingleton<ColorBlindSettings>.Instance.variationColors[variationColor]);
+							if (variationColoredMaterial.HasProperty("_EmissiveColor"))
+							{
+								variationColoredMaterial.SetColor("_EmissiveColor", variationColor < 0 ? Color.white : MonoSingleton<ColorBlindSettings>.Instance.variationColors[variationColor]);
+							}
+							else
+							{
+								variationColoredMaterial.color = (variationColor < 0) ? Color.white : MonoSingleton<ColorBlindSettings>.Instance.variationColors[variationColor];
+							}
 						}
 						else
-						{
-							variationColoredMaterial.color = (variationColor < 0) ? Color.white : MonoSingleton<ColorBlindSettings>.Instance.variationColors[variationColor];
-						}
-					}
-					else
-					{
-						if (variationColored)
 						{
 							if (!weaponIcon.variationColoredRenderers.Contains(thisRenderer))
 							{
 								weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.AddItem(thisRenderer).ToArray();
 							}
 						}
-						else
+					}
+					else
+					{
+						if (weaponIcon.variationColoredRenderers.Contains(thisRenderer))
 						{
-							if (weaponIcon.variationColoredRenderers.Contains(thisRenderer))
-							{
-								weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.Where(rend => rend != thisRenderer).ToArray();
-							}
+							weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.Where(rend => rend != thisRenderer).ToArray();
 						}
 					}
-
 				}
 
 				static int GetVariationNumber(WeaponVariationFilter variation)
