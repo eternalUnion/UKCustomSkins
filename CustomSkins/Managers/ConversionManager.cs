@@ -17,7 +17,7 @@ namespace CustomSkins.Managers
 			const string VERTEXLIT_EM_CUSTOM_SHADER = "Assets/Shaders/Special/ULTRAKILL-vertexlit-customcolors-emissive.shader";
 			
 			const string UNLIT_EM_SHADER = "Assets/Shaders/Main/ULTRAKILL-unlit-emissive.shader";
-			const string UNLIT_EM_CUSTOM_SHADER = "Assets/Shaders/Main/ULTRAKILL-unlit-customcolors.shader";
+			const string UNLIT_EM_CUSTOM_SHADER = "Assets/Shaders/Special/ULTRAKILL-vertexlit-customcolors-emissive.shader";
 			
 			const string VERTEXLIT_RAI_EM_SHADER = "Assets/Shaders/Special/ULTRAKILL-vertexlit-railgun.shader";
 			const string VERTEXLIT_RAI_EM_CUSTOM_SHADER = "Assets/Shaders/Special/ULTRAKILL-vertexlit-customcolors-railgun.shader";
@@ -193,7 +193,7 @@ namespace CustomSkins.Managers
 					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, RAI_ID_FILENAME, "Railcannon", "Assets/Models/Weapons/Railcannon/Railcannon.mat", "Railcannon CustomColor", "Assets/Models/Weapons/Railcannon/Railcannon CustomColor.mat", "railcannon_blue.json", "railcannon_custom.json", VERTEXLIT_RAI_EM_SHADER, VERTEXLIT_RAI_EM_CUSTOM_SHADER);
 					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, null, "RailcannonHarpoon", "Assets/Models/Weapons/Railcannon/RailcannonHarpoon.mat", null, null, "railcannon_green.json", null, VERTEXLIT_RAI_EM_SHADER, VERTEXLIT_RAI_EM_CUSTOM_SHADER);
 					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, null, "RailcannonMalicious", "Assets/Models/Weapons/Railcannon/RailcannonMalicious.mat", null, null, "railcannon_red.json", null, VERTEXLIT_RAI_EM_SHADER, VERTEXLIT_RAI_EM_CUSTOM_SHADER);
-					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, RAI_ID_FILENAME, "Railcannon Unlit", "Assets/Models/Weapons/Railcannon/Railcannon Unlit.mat", "Railcannon Unlit CustomColor", "Assets/Models/Weapons/Railcannon/Railcannon Unlit CustomColor.mat", "railcannon_preview.json", "railcannon_preview_custom.json", UNLIT_EM_SHADER, UNLIT_EM_CUSTOM_SHADER);
+					ProcessSkin(RAI_TEX_FILENAME, RAI_EM_FILENAME, RAI_ID_FILENAME, "Railcannon Unlit", "Assets/Models/Weapons/Railcannon/Railcannon Unlit.mat", "Railcannon Unlit CustomColor", "Assets/Models/Weapons/Railcannon/Railcannon Unlit CustomColor.mat", "railcannon_preview.json", "railcannon_preview_custom.json", VERTEXLIT_RAI_EM_SHADER, VERTEXLIT_RAI_EM_CUSTOM_SHADER);
 					
 					// RocketLauncher
 					ProcessSkin(RCK_TEX_FILENAME, RCK_EM_FILENAME, RCK_ID_FILENAME, "RocketLauncher", "Assets/Models/Weapons/RocketLauncher/RocketLauncher.mat", "RocketLauncherCustom", "Assets/Models/Weapons/RocketLauncher/RocketLauncherCustom.mat", "rocket_launcher.json", "rocket_launcher_custom.json");
