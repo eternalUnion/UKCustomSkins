@@ -47,6 +47,7 @@ namespace CustomSkins.Managers
 			ReloadManager.ReloadAll();
 		}
 
+		#region Materials
 		public static bool TryGetMaterial(string name, out Material mat, out MaterialDefinition matDef)
 		{
 			foreach (var provider in _providers)
@@ -85,5 +86,20 @@ namespace CustomSkins.Managers
 			matDef = null;
 			return false;
 		}
+		#endregion
+
+		#region Icons
+		public static bool TryGetIcon(string name, out IconInstance iconInst)
+		{
+			foreach (var provider in _providers)
+			{
+				if (provider.TryGetIcon(name, out iconInst))
+					return true;
+			}
+
+			iconInst = new IconInstance();
+			return false;
+		}
+		#endregion
 	}
 }

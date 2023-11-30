@@ -1,6 +1,8 @@
 ﻿using BepInEx;
 using BepInEx.Bootstrap;
 using CustomSkins.Managers;
+using CustomSkins.Managers.IconManager;
+using CustomSkins.Managers.MaterialManagers;
 using HarmonyLib;
 using PluginConfig;
 using System;
@@ -48,13 +50,14 @@ namespace CustomSkins
 		{
 			new Harmony(PLUGIN_GUID).PatchAll();
 
+			ReloadManager.onReload += WeaponMaterialManager.OnSkinReload;
+			ReloadManager.onReload += WeaponIconManager.OnSkinReload;
+
 			Addressables.InitializeAsync().WaitForCompletion();
-			AddressableAssetManager.Init();
 
 			bundle = AssetBundle.LoadFromMemory(ManifestReader.GetBytes("AssetBundles.customskins"));
 
 			ConfigManager.Init();
-			ReloadManager.Init();
 
 			ConfigManager.ScanSkins();
 			SkinManager.ReloadAllSkins();

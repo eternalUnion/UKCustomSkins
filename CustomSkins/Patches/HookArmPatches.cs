@@ -28,7 +28,10 @@ namespace CustomSkins.Patches
 				void ReloadMaterial()
 				{
 					if (__instance == null)
+					{
+						WeaponMaterialManager.onWeaponMaterialReload -= ReloadMaterial;
 						return;
+					}
 
 					if (WeaponMaterialManager.TryGetWeaponMaterial(matName, 0, WeaponVariationFilter.green, WeaponTypeFilter.stock, out Material weaponMat, out MaterialDefinition weaponMatDef))
 					{
@@ -52,13 +55,7 @@ namespace CustomSkins.Patches
 					}
 				}
 
-				InternalComponents.WeaponMaterialReloadEventListener reloadListener = armRenderer.gameObject.AddComponent<InternalComponents.WeaponMaterialReloadEventListener>();
-				reloadListener.onReload = () =>
-				{
-					ReloadMaterial();
-				};
-				reloadListener.Subscribe();
-
+				WeaponMaterialManager.onWeaponMaterialReload += ReloadMaterial;
 				ReloadMaterial();
 			}
 		}

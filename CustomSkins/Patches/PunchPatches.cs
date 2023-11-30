@@ -27,6 +27,12 @@ namespace CustomSkins.Patches
 
 				void ReloadMaterial()
 				{
+					if (__instance == null)
+					{
+						WeaponMaterialManager.onWeaponMaterialReload -= ReloadMaterial;
+						return;
+					}
+
 					WeaponVariationFilter variation;
 					int variationColor;
 					if (__instance.type == FistType.Standard)
@@ -67,13 +73,7 @@ namespace CustomSkins.Patches
 					}
 				}
 
-				InternalComponents.WeaponMaterialReloadEventListener reloadListener = armRenderer.gameObject.AddComponent<InternalComponents.WeaponMaterialReloadEventListener>();
-				reloadListener.onReload = () =>
-				{
-					ReloadMaterial();
-				};
-				reloadListener.Subscribe();
-
+				WeaponMaterialManager.onWeaponMaterialReload += ReloadMaterial;
 				ReloadMaterial();
 			}
 		}

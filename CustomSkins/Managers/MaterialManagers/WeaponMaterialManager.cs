@@ -1,5 +1,5 @@
-﻿using CustomSkins.Attributes;
-using CustomSkins.Data;
+﻿using CustomSkins.Data;
+using CustomSkins.Providers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,8 +12,8 @@ namespace CustomSkins.Managers.MaterialManagers
 		public delegate void OnWeaponMaterialReload();
 		public static event OnWeaponMaterialReload onWeaponMaterialReload;
 
-		private static Dictionary<string, Tuple<Material, MaterialDefinition>> customGeneralMaterials = new Dictionary<string, Tuple<Material, MaterialDefinition>>();
-		private static Dictionary<string, Tuple<Material, MaterialDefinition>>[,,] customMaterials = new Dictionary<string, Tuple<Material, MaterialDefinition>>[6, 3, 2];
+		private static Dictionary<string, MaterialInstance> customGeneralMaterials = new Dictionary<string, MaterialInstance>();
+		private static Dictionary<string, MaterialInstance>[,,] customMaterials = new Dictionary<string, MaterialInstance>[6, 3, 2];
 
 		static WeaponMaterialManager()
 		{
@@ -23,7 +23,7 @@ namespace CustomSkins.Managers.MaterialManagers
 				{
 					for (int k = 0; k < 2; k++)
 					{
-						customMaterials[i, j, k] = new Dictionary<string, Tuple<Material, MaterialDefinition>>();
+						customMaterials[i, j, k] = new Dictionary<string, MaterialInstance>();
 					}
 				}
 			}
@@ -70,7 +70,7 @@ namespace CustomSkins.Managers.MaterialManagers
 		{
 			if (SkinManager.TryGetWeaponMaterial(materialName, weaponNum, variation, type, out Material weaponMat, out MaterialDefinition matDef))
 			{
-				customMaterials[weaponNum, VariationToIndex(variation), (type == WeaponTypeFilter.stock ? 0 : 1)][materialName] = new Tuple<Material, MaterialDefinition>(weaponMat, matDef);
+				customMaterials[weaponNum, VariationToIndex(variation), (type == WeaponTypeFilter.stock ? 0 : 1)][materialName] = new MaterialInstance(matDef, weaponMat);
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace CustomSkins.Managers.MaterialManagers
 		{
 			if (SkinManager.TryGetGeneralWeaponMaterial(materialName, out var weaponMat, out var weaponMatDef))
 			{
-				customGeneralMaterials[materialName] = new Tuple<Material, MaterialDefinition>(weaponMat, weaponMatDef);
+				customGeneralMaterials[materialName] = new MaterialInstance(weaponMatDef, weaponMat);
 			}
 		}
 
@@ -86,8 +86,8 @@ namespace CustomSkins.Managers.MaterialManagers
 		{
 			if (customMaterials[weaponNum, VariationToIndex(variation), (type == WeaponTypeFilter.stock ? 0 : 1)].TryGetValue(materialName, out var weaponMat))
 			{
-				mat = weaponMat.Item1;
-				matDef = weaponMat.Item2;
+				mat = weaponMat.material;
+				matDef = weaponMat.materialDefinition;
 
 				return true;
 			}
@@ -101,8 +101,8 @@ namespace CustomSkins.Managers.MaterialManagers
 		{
 			if (customGeneralMaterials.TryGetValue(materialName, out var weaponMat))
 			{
-				mat = weaponMat.Item1;
-				matDef = weaponMat.Item2;
+				mat = weaponMat.material;
+				matDef = weaponMat.materialDefinition;
 				return true;
 			}
 
@@ -111,7 +111,6 @@ namespace CustomSkins.Managers.MaterialManagers
 			return false;
 		}
 
-		[ReloadMethod]
 		public static void OnSkinReload()
 		{
 			Debug.Log("Reloading weapon skins");

@@ -7,9 +7,49 @@ using System.Text;
 using UnityEngine.AddressableAssets;
 using UnityEngine;
 using System.Linq;
+using CustomSkins.Utils;
 
 namespace CustomSkins.Providers
 {
+	public struct MaterialInstance
+	{
+		public MaterialDefinition materialDefinition;
+		public Material material;
+
+		public MaterialInstance()
+		{
+			materialDefinition = null;
+			material = null;
+		}
+
+		public MaterialInstance(MaterialDefinition materialDefinition, Material material)
+		{
+			this.materialDefinition = materialDefinition;
+			this.material = material;
+		}
+	}
+
+	public struct IconInstance
+	{
+		public IconDefinition iconDefinition;
+		public Sprite icon;
+		public Sprite iconGlow;
+
+		public IconInstance()
+		{
+			iconDefinition = null;
+			icon = null;
+			iconGlow = null;
+		}
+
+		public IconInstance(IconDefinition iconDefinition, Sprite icon, Sprite iconGlow)
+		{
+			this.iconDefinition = iconDefinition;
+			this.icon = icon;
+			this.iconGlow = iconGlow;
+		}
+	}
+
 	// Created from a file source, checks all the data files and creates assets (materials, audio clips etc.)
 	// File source is closed after the construction
 	public class AssetProvider
@@ -17,11 +57,13 @@ namespace CustomSkins.Providers
 		private FileProvider _fileProvider;
 		private AssetBundle _bundle;
 
-		private List<Tuple<MaterialDefinition, Material>> _materials = new List<Tuple<MaterialDefinition, Material>>();
-		private Dictionary<string, Texture2D> _textures = new Dictionary<string, Texture2D>();
+		private List<MaterialInstance> _materials = new List<MaterialInstance>();
+
+		private List<IconInstance> _icons = new List<IconInstance>();
 
 		private bool _disposed = false;
 		private List<UnityEngine.Object> _unmanagedResources = new List<UnityEngine.Object>();
+		private Dictionary<string, Texture2D> _textures = new Dictionary<string, Texture2D>();
 		internal void Dispose()
 		{
 			if (_disposed)
@@ -84,7 +126,27 @@ namespace CustomSkins.Providers
 							var mat = CreateMaterial(def);
 
 							if (mat != null)
-								_materials.Add(new Tuple<MaterialDefinition, Material>(def, mat));
+								_materials.Add(new MaterialInstance(def, mat));
+						}
+						catch (Exception e)
+						{
+							Debug.LogException(e);
+						}
+					}
+				}
+
+				string iconDataPath = "Data/Icons";
+				if (provider.DirectoryExists(iconDataPath))
+				{
+					foreach (string iconData in provider.GetFiles(iconDataPath))
+					{
+						try
+						{
+							IconDefinition def = JsonConvert.DeserializeObject<IconDefinition>(provider.ReadFile(iconData));
+							CreateIcon(def, out Sprite icon, out Sprite iconGlow);
+
+							if (icon != null)
+								_icons.Add(new IconInstance(def, icon, iconGlow));
 						}
 						catch (Exception e)
 						{
@@ -429,29 +491,69 @@ namespace CustomSkins.Providers
 			_unmanagedResources.Add(mat);
 			return mat;
 		}
-	
+		
+		private static Sprite defaultIcon = null;
+		private void CreateIcon(IconDefinition iconDef, out Sprite icon, out Sprite iconGlow)
+		{
+			icon = null;
+			iconGlow = null;
+
+			if (_disposed)
+				throw new ObjectDisposedException(nameof(AssetProvider));
+
+			if (defaultIcon == null)
+				defaultIcon = Addressables.LoadAssetAsync<Sprite>("Assets/Textures/UI/questionMark.png").WaitForCompletion();
+
+			Texture2D iconTexture = GetTexture(iconDef.iconTexture, iconDef.iconSource);
+			if (iconTexture != null)
+			{
+				iconTexture.filterMode = iconDef.iconFilterMode;
+
+				icon = iconTexture.CreateSpriteFrom();
+				_unmanagedResources.Add(icon);
+			}
+			else
+			{
+				icon = defaultIcon;
+			}
+
+			Texture2D iconGlowTexture = GetTexture(iconDef.iconGlowTexture, iconDef.iconGlowSource);
+			if (iconGlowTexture != null)
+			{
+				iconGlowTexture.filterMode = iconDef.iconGlowFilterMode;
+
+				iconGlow = iconGlowTexture.CreateSpriteFrom();
+				_unmanagedResources.Add(iconGlow);
+			}
+			else
+			{
+				iconGlow = defaultIcon;
+			}
+		}
+
 		// Asset provider methods
+		#region Materials
 		public bool TryGetMaterial(string materialName, out Material mat, out MaterialDefinition matDef)
 		{
-			var material = _materials.Where(mat => mat.Item1.targetMaterial == materialName).FirstOrDefault();
+			var material = _materials.Where(mat => mat.materialDefinition.targetMaterial == materialName).FirstOrDefault();
 
-			if (material == null)
+			if (material.materialDefinition == null)
 			{
 				mat = null;
 				matDef = null;
 				return false;
 			}
 
-			matDef = material.Item1;
-			mat = material.Item2;
+			matDef = material.materialDefinition;
+			mat = material.material;
 			return true;
 		}
 
 		public bool TryGetGeneralWeaponMaterial(string materialName, out Material mat, out MaterialDefinition matDef)
 		{
-			foreach (var material in _materials.Where(mat => mat.Item1.targetMaterial == materialName))
+			foreach (var material in _materials.Where(mat => mat.materialDefinition.targetMaterial == materialName))
 			{
-				var matInfo = material.Item1;
+				var matInfo = material.materialDefinition;
 				if (matInfo.filters != null)
 				{
 					if (matInfo.filters.weaponNumber != -1)
@@ -464,8 +566,8 @@ namespace CustomSkins.Providers
 						continue;
 				}
 
-				matDef = material.Item1;
-				mat = material.Item2;
+				matDef = material.materialDefinition;
+				mat = material.material;
 
 				return true;
 			}
@@ -477,14 +579,14 @@ namespace CustomSkins.Providers
 
 		public bool TryGetWeaponMaterial(string materialName, int weaponNumber, WeaponVariationFilter weaponVariation, WeaponTypeFilter weaponType, out Material mat, out MaterialDefinition matDef)
 		{
-			Tuple<MaterialDefinition, Material> bestMaterial = null;
+			MaterialInstance bestMaterial = new MaterialInstance();
 			int bestMaterialMatchCount = -1;
 
-			foreach (var material in _materials.Where(mat => mat.Item1.targetMaterial == materialName))
+			foreach (var material in _materials.Where(mat => mat.materialDefinition.targetMaterial == materialName))
 			{
 				int matchCount = 0;
 
-				var matInfo = material.Item1;
+				var matInfo = material.materialDefinition;
 				if (matInfo.filters != null)
 				{
 					if (matInfo.filters.weaponNumber != -1)
@@ -530,10 +632,19 @@ namespace CustomSkins.Providers
 				return false;
 			}
 
-			matDef = bestMaterial.Item1;
-			mat = bestMaterial.Item2;
+			matDef = bestMaterial.materialDefinition;
+			mat = bestMaterial.material;
 			return true;
 		}
+		#endregion
+
+		#region Icons
+		public bool TryGetIcon(string iconName, out IconInstance iconInst)
+		{
+			iconInst = _icons.Where(icon => icon.iconDefinition.targetIcon == iconName).FirstOrDefault();
+			return iconInst.iconDefinition != null;
+		}
+		#endregion
 	}
 
 }

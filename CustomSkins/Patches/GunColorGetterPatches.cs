@@ -140,6 +140,12 @@ namespace CustomSkins.Patches
 
 			void ReloadMats()
 			{
+				if (__instance == null)
+				{
+					WeaponMaterialManager.onWeaponMaterialReload -= ReloadMats;
+					return;
+				}
+
 				// Priority list:
 				// 1: Filtered weapon material (variation, alt/stock, weapon number => best match)
 				// 2: General weapon material (no filter, material name match)
@@ -200,7 +206,7 @@ namespace CustomSkins.Patches
 					}
 					else
 					{
-						if (weaponIcon.variationColoredRenderers.Contains(thisRenderer))
+						if (weaponIcon != null && weaponIcon.variationColoredRenderers.Contains(thisRenderer))
 						{
 							weaponIcon.variationColoredRenderers = weaponIcon.variationColoredRenderers.Where(rend => rend != thisRenderer).ToArray();
 						}
@@ -260,17 +266,11 @@ namespace CustomSkins.Patches
 						SetVariationColored(bestMaterialDefinition, __instance.coloredMaterials[i], GetVariationNumber(variation));
 					}
 				}
-			}
-
-			InternalComponents.WeaponMaterialReloadEventListener listener = __instance.gameObject.AddComponent<InternalComponents.WeaponMaterialReloadEventListener>();
-			listener.onReload = () =>
-			{
-				ReloadMats();
 
 				__instance.UpdateColor();
-			};
-			listener.Subscribe();
+			}
 
+			WeaponMaterialManager.onWeaponMaterialReload += ReloadMats;
 			ReloadMats();
 		}
 	}
